@@ -408,6 +408,37 @@ const deleteReply = async (req, res) => {
     }
 };
 
+
+// Get top contributors
+const getTopContributors = async (req, res) => {
+    try {
+        const aggregationPipeline = [
+            { $group: { _id: "$user", postCount: { $sum: 1 } } },
+            { $sort: { postCount: -1 } },
+            { $limit: 5 },
+            { $lookup: {
+                from: 'users',
+                localField: '_id',
+                foreignField: '_id',
+                as: 'user'
+            }},
+            { $unwind: "$user" },
+            { $project: { _id: 0, user: 1, postCount: 1 } }
+        ];
+
+        console.log('Aggregation Pipeline:', JSON.stringify(aggregationPipeline, null, 2));
+
+        const topContributors = await Post.aggregate(aggregationPipeline);
+
+        console.log('Top Contributors:', topContributors);
+
+        res.status(200).json(topContributors);
+    } catch (error) {
+        console.error('Error in getTopContributors:', error.message);
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     createPost,
     getPosts,
@@ -421,5 +452,6 @@ module.exports = {
     getUserPosts,
     likePost,
     editReply,
-    deleteReply
+    deleteReply,
+    getTopContributors,
 };

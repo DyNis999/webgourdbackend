@@ -5,6 +5,8 @@ const upload = require('../utils/multer');
 
 const router = express.Router();
 
+// Get top contributors
+router.get('/top-contributors', postController.getTopContributors);
 
 // Create a new post
 router.post('/', [authJwt.isAuthenticatedUser, upload.array('images')], postController.createPost);

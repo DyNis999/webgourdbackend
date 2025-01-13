@@ -38,13 +38,11 @@ exports.isAuthenticatedUser = async (req, res, next) => {
     }
 
     if (!token && req.headers.authorization) {
-        const authHeader = req.headers.authorization; // Get the Authorization header
-        console.log('Authorization Header:', authHeader); // Log the header for debugging
-        token = authHeader.split(' ')[1]; // Extract the token after "Bearer"
+        const authHeader = req.headers.authorization;
+        console.log('Authorization Header:', authHeader); // Debugging log
+        token = authHeader.split(' ')[1];
         token = token.replace(/"/g, ''); 
     }
-
-    console.log('Extracted Token:', token);
 
     if (!token) {
         return res.status(401).json({ message: 'Login first to access this resource' });
@@ -52,8 +50,13 @@ exports.isAuthenticatedUser = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('Decoded Token:', decoded); // Log the decoded token for verification
-        req.auth = { userId: decoded.id }; // Attach the user ID to the request object
+        console.log('Decoded Token:', decoded); // Debugging log
+        const user = await User.findById(decoded.id); // Fetch full user object from DB
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        req.user = user; // Attach full user object
+        req.auth = { userId: decoded.id }; // Attach just the user ID separately (if needed)
         next();
     } catch (error) {
         console.error('Token verification failed:', error.message);
@@ -61,11 +64,10 @@ exports.isAuthenticatedUser = async (req, res, next) => {
     }
 };
 
-
 exports.authorizeAdmin = () => {
     return (req, res, next) => {
-        console.log(req.user, req.body);
-        if (!req.user.isAdmin) {
+        console.log('User in authorizeAdmin:', req.user); // Debugging log
+        if (!req.user || !req.user.isAdmin) {
             return res.status(403).json({ message: `Access denied. Admin privileges required.` });
         }
         next();
