@@ -5,6 +5,21 @@ const mongoose = require('mongoose'); // Import mongoose for ObjectId validation
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
+// Function to update the user's online status
+async function updateOnlineStatus(userId, status) {
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        user.isOnline = status;
+        await user.save();
+        console.log(`User ${userId} is now ${status ? 'online' : 'offline'}`);
+    } catch (error) {
+        console.error('Error updating online status:', error);
+    }
+}
 
 // Route for fetching all users
 exports.getAllUsers = async (req, res) => {
@@ -88,6 +103,9 @@ exports.loginUser = async (req, res, next) => {
             return res.status(401).json({ message: 'Invalid Email or Password' });
         }
 
+        // Update user online status to true
+        await updateOnlineStatus(user._id, true);
+
         console.log('Password matched, sending token');
         sendToken(user, 200, res);
     } catch (error) {
@@ -115,7 +133,6 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to delete user', error: error.message });
     }
 };
-
 
 exports.updateUserRole = async (req, res) => {
     try {
