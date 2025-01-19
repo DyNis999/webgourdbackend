@@ -18,4 +18,4 @@ cloudinary.config({
 
 // Start the server (already handled in app.js)
 const PORT = process.env.PORT || 4000;
-console.log(`Server started on port: ${PORT} in ${process.env.NODE_ENV} mode`);
+// console.log(`Server started on port: ${PORT} in ${process.env.NODE_ENV} mode`);

@@ -39,7 +39,7 @@ exports.isAuthenticatedUser = async (req, res, next) => {
 
     if (!token && req.headers.authorization) {
         const authHeader = req.headers.authorization;
-        console.log('Authorization Header:', authHeader); // Debugging log
+        // console.log('Authorization Header:', authHeader); // Debugging log
         token = authHeader.split(' ')[1];
         token = token.replace(/"/g, ''); 
     }
@@ -50,7 +50,7 @@ exports.isAuthenticatedUser = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('Decoded Token:', decoded); // Debugging log
+        // console.log('Decoded Token:', decoded); // Debugging log
         const user = await User.findById(decoded.id); // Fetch full user object from DB
         if (!user) {
             return res.status(404).json({ message: 'User not found' });

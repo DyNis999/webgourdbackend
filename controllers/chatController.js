@@ -68,7 +68,7 @@ exports.getChats = async (req, res) => {
 // Fetch messages between sender and receiver
 exports.getMessages = async (req, res) => {
     const { senderId, receiverId } = req.params;
-    console.log({ senderId, receiverId });
+    // console.log({ senderId, receiverId });
 
     try {
         const messages = await Chat.find({
@@ -114,7 +114,7 @@ exports.createMessage = async (req, res) => {
 exports.markMessagesAsRead = async (req, res) => {
     try {
         const { messages } = req.body;
-        console.log('Marking messages as read:', messages);
+        // console.log('Marking messages as read:', messages);
         if (!Array.isArray(messages)) {
             return res.status(400).json({ message: "Invalid message IDs" });
         }

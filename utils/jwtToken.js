@@ -1,12 +1,12 @@
 const sendToken = (user, statusCode, res) => {
     // Debugging user object
-    console.log('User Object:', user);
+    // console.log('User Object:', user);
 
     // Generate Jwt token
     const token = user.getJwtToken();
 
     // Debugging generated token
-    console.log('Generated Token:', token);
+    // console.log('Generated Token:', token);
 
     // Options for cookie
     const options = {

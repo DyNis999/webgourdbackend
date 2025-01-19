@@ -148,7 +148,7 @@ const deletePost = async (req, res) => {
 
 // Add a new comment to a post
 const addComment = async (req, res) => {
-    console.log('User from token:', req.user); // Log user data
+    // console.log('User from token:', req.user); // Log user data
 
     const { postId } = req.params;
     const { content } = req.body;
@@ -346,9 +346,9 @@ const editReply = async (req, res) => {
     const userId = req.auth.userId;
     const isAdmin = req.auth.isAdmin;
 
-    console.log('Request params:', { postId, commentId, replyId });
-    console.log('Request body:', { content });
-    console.log('User:', { userId, isAdmin });
+    // console.log('Request params:', { postId, commentId, replyId });
+    // console.log('Request body:', { content });
+    // console.log('User:', { userId, isAdmin });
 
     if (!content) {
         return res.status(400).json({ message: 'Reply content is required.' });
@@ -426,11 +426,11 @@ const getTopContributors = async (req, res) => {
             { $project: { _id: 0, user: 1, postCount: 1 } }
         ];
 
-        console.log('Aggregation Pipeline:', JSON.stringify(aggregationPipeline, null, 2));
+        // console.log('Aggregation Pipeline:', JSON.stringify(aggregationPipeline, null, 2));
 
         const topContributors = await Post.aggregate(aggregationPipeline);
 
-        console.log('Top Contributors:', topContributors);
+        // console.log('Top Contributors:', topContributors);
 
         res.status(200).json(topContributors);
     } catch (error) {
