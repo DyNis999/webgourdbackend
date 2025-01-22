@@ -8,6 +8,9 @@ const user = require('./routes/user');
 const category = require('./routes/category');
 const post = require('./routes/Post');
 const chat = require('./routes/chat');
+const gourdType = require('./routes/gourdtype');
+const gourdvariety = require('./routes/gourdvariety');
+const monitoring = require('./routes/Monitoring');
 
 const app = express();
 // const server = http.createServer(app);
@@ -25,6 +28,9 @@ app.use('/api/v1/users', user);
 app.use('/api/v1/categories', category);
 app.use('/api/v1/posts', post);
 app.use('/api/v1/chat', chat);
+app.use ('/api/v1/gourdType', gourdType);
+app.use ('/api/v1/gourdVariety', gourdvariety);
+app.use ('/api/v1/Monitoring', monitoring);
 
 const server = app.listen(4000, () => {
   console.log("Server is running on http://localhost:4000");

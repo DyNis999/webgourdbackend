@@ -21,6 +21,23 @@ async function updateOnlineStatus(userId, status) {
     }
 }
 
+// Route for logging out a user
+exports.logoutUser = async (req, res) => {
+    const { userId } = req.body; // Assuming you send the userId with the logout request
+
+    console.log('Logging out user with ID:', userId); // Log userId to check
+
+    try {
+        // Update online status to false when user logs out
+        await updateOnlineStatus(userId, false);
+
+        res.status(200).send({ message: 'User logged out and online status updated' });
+    } catch (error) {
+        console.error('Error updating online status:', error); // Log error if it occurs
+        res.status(500).send('Error updating online status');
+    }
+};
+
 // Route for fetching all users
 exports.getAllUsers = async (req, res) => {
     try {
