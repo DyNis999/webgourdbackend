@@ -123,8 +123,23 @@ exports.loginUser = async (req, res, next) => {
         // Update user online status to true
         await updateOnlineStatus(user._id, true);
 
-        console.log('Password matched, sending token');
-        sendToken(user, 200, res);
+        // console.log('Password matched, sending token');
+        // sendToken(user, 200, res);
+         // Generate token and send it
+         const token = user.getJwtToken();
+         console.log('Generated Token:', token);
+ 
+         res.status(200).cookie('token', token, {
+             httpOnly: true,
+             secure: process.env.NODE_ENV === 'production',
+             expires: new Date(
+                 Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
+             ),
+         }).json({
+             success: true,
+             token,
+             user,
+         });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Server Error' });
