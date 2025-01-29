@@ -146,6 +146,68 @@ exports.loginUser = async (req, res, next) => {
     }
 };
 
+exports.getUserProfile = async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    return res.status(200).json({
+        success: true,
+        user
+    })
+}
+
+
+exports.updateProfile = async (req, res, next) => {
+    console.log('updateProfile function called'); // Log when the function is called
+    try {
+        const newUserData = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            street: req.body.street,
+            apartment: req.body.apartment,
+            zip: req.body.zip,
+            city: req.body.city,
+            country: req.body.country
+        };
+
+        // Update image
+        if (req.file && req.file.path) {
+            let user = await User.findById(req.user.id);
+
+            const imageUrl = user.image;
+            if (imageUrl) {
+                const image_id = imageUrl.split('/').pop().split('.')[0]; // Extract public_id from URL
+                await cloudinary.v2.uploader.destroy(`gourdify/${image_id}`);
+            }
+
+            const result = await cloudinary.v2.uploader.upload(req.file.path, {
+                folder: 'gourdify',
+                width: 150,
+                crop: "scale"
+            });
+
+            newUserData.image = result.secure_url;
+        }
+
+        // console.log('Updating user with new data:', newUserData);
+        await User.findByIdAndUpdate(req.user.id, newUserData, {
+            new: true,
+            runValidators: true,
+            useFindAndModify: false
+        });
+
+        res.status(200).json({
+            success: true
+        });
+    } catch (error) {
+        // console.error('Error updating profile:', error); // Log the error details
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
 exports.deleteUser = async (req, res) => {
     const userId = req.params.userId;
 

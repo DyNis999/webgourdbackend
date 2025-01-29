@@ -89,6 +89,12 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("deleteMessage", (data) => {
+    const { messageId, userId } = data;
+    console.log("Delete message request:", data);
+    io.emit("messageDeleted", { messageId, userId });
+  });
+
   socket.on("disconnect", (reason) => {
     // console.log("Disconnect reason:", reason);
     for (const [userId, socketId] of onlineUsers.entries()) {
@@ -100,6 +106,7 @@ io.on("connection", (socket) => {
         break;
       }
     }
+    
     console.log("Current online users:", Array.from(onlineUsers.entries()));
   });
 });
