@@ -49,4 +49,7 @@ router.put('/:postId/comments/:commentId/replies/:replyId', authJwt.isAuthentica
 // Delete a reply within a comment
 router.delete('/:postId/comments/:commentId/replies/:replyId', authJwt.isAuthenticatedUser, postController.deleteReply);
 
+
+router.put('/status/:id', authJwt.isAuthenticatedUser, postController.updatePostStatus);
+
 module.exports = router;

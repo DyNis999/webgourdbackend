@@ -41,6 +41,7 @@ const createPost = async (req, res) => {
             user: userId, // Use the authenticated user's ID
             category,
             likes: 0,
+            status: 'Pending'
         });
 
         const savedPost = await post.save();
@@ -134,6 +135,34 @@ const updatePost = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+const updatePostStatus = async (req, res) => {
+    try {
+        const { status } = req.body;  // Expect the status from the body (Approved, Failed)
+
+        // Validate status
+        if (!['Approved', 'Rejected'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
+        }
+
+        // Find the post by ID
+        const post = await Post.findById(req.params.id);
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // Update the status
+        post.status = status;
+
+        const updatedPost = await post.save(); // Save the updated post
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+
 
 // Delete a post by ID
 const deletePost = async (req, res) => {
@@ -273,7 +302,7 @@ const deleteComment = async (req, res) => {
         // Remove the comment from the array
         post.comments.pull(commentId);  // Using pull to remove by comment ID
         await post.save();
-        
+
         res.status(204).send(); // No content response for successful deletion
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -416,12 +445,14 @@ const getTopContributors = async (req, res) => {
             { $group: { _id: "$user", postCount: { $sum: 1 } } },
             { $sort: { postCount: -1 } },
             { $limit: 5 },
-            { $lookup: {
-                from: 'users',
-                localField: '_id',
-                foreignField: '_id',
-                as: 'user'
-            }},
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
             { $unwind: "$user" },
             { $project: { _id: 0, user: 1, postCount: 1 } }
         ];
@@ -444,6 +475,7 @@ module.exports = {
     getPosts,
     getPostById,
     updatePost,
+    updatePostStatus,
     deletePost,
     addComment,
     addReply,
