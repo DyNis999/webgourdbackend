@@ -1,5 +1,6 @@
 const Monitoring = require('../models/Monitoring');
 const cloudinary = require("cloudinary").v2;
+
 // Get all monitoring records
 const getMonitorings = async (req, res) => {
     try {
@@ -64,6 +65,7 @@ const createMonitoring = async (req, res) => {
             fruitsHarvested,
             dateOfFinalization,
             status,
+            plotNo, // Added plotNo
         } = req.body;
 
         // Handle file uploads for pollinatedFlowerImages
@@ -101,6 +103,7 @@ const createMonitoring = async (req, res) => {
             fruitHarvestedImages,
             dateOfFinalization: validatedDateOfFinalization,
             status: status || 'In Progress',
+            plotNo, // Added plotNo
         });
 
         await newMonitoring.save();
@@ -134,6 +137,7 @@ const updateMonitoring = async (req, res) => {
         monitoring.fruitHarvestedImages = req.body.fruitHarvestedImages || monitoring.fruitHarvestedImages;
         monitoring.dateOfFinalization = req.body.dateOfFinalization || monitoring.dateOfFinalization;
         monitoring.status = req.body.status || monitoring.status;
+        monitoring.plotNo = req.body.plotNo || monitoring.plotNo; // Added plotNo
 
         // Handle file uploads if any
         let fruitHarvestedImages = monitoring.fruitHarvestedImages || [];  // Initialize with existing images if any

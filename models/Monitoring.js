@@ -6,6 +6,10 @@ const monitoringSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  plotNo: {
+    type: String,
+    required: true,
+  },
   gourdType: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'GourdType',
