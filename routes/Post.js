@@ -10,9 +10,12 @@ router.get('/top-contributors', postController.getTopContributors);
 
 // Create a new post
 router.post('/', [authJwt.isAuthenticatedUser, upload.array('images')], postController.createPost);
-
 // Get all posts
 router.get('/', postController.getPosts);
+// Create a Archive post
+router.post('/archive', [authJwt.isAuthenticatedUser, upload.array('images')], postController.archivePost);
+// Get all Archive
+router.get('/archive', postController.getArchives);
 
 // Get a single post by ID
 router.get('/:id', postController.getPostById);
@@ -22,6 +25,8 @@ router.put('/:id', [authJwt.isAuthenticatedUser, upload.array('images')], postCo
 
 // Delete a post by ID
 router.delete('/:id', authJwt.isAuthenticatedUser, postController.deletePost);
+// Delete a Archive by ID
+router.delete('/archive/:id', authJwt.isAuthenticatedUser, postController.deleteArchive);
 
 
 

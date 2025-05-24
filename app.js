@@ -17,7 +17,7 @@ const app = express();
 // const server = http.createServer(app);
 
 app.use(cors({
-  // origin: "http://localhost:3000",
+  origin: "http://localhost:3000",
   credentials: true,
 }));
 
@@ -40,10 +40,10 @@ const server = app.listen(4000, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: "https://webgourd.vercel.app",
-    methods: ["GET", "POST"],
-    credentials: true,
-    secure: true,
+    // origin: "https://webgourd.vercel.app",
+    // methods: ["GET", "POST"],
+    // credentials: true,
+    // secure: true,
   },
   pingTimeout: 60000,
   pingInterval: 25000,

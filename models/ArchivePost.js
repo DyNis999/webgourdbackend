@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const postSchema = new mongoose.Schema({
+const ArchivedPostSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
@@ -75,21 +75,20 @@ const postSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Approved', 'Rejected'],
         default: 'Pending'
-    } // Status 
-    //  archived: { type: Boolean, default: false },
+    }, // Status 
 
 });
 
 // Update the updatedAt field before saving the post
-postSchema.pre('save', function (next) {
+ArchivedPostSchema.pre('save', function (next) {
     this.updatedAt = Date.now();
     next();
 });
 
-postSchema.virtual('id').get(function () {
+ArchivedPostSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 
-postSchema.set('toJSON', { virtuals: true });
+ArchivedPostSchema.set('toJSON', { virtuals: true });
 
-exports.Post = mongoose.model('Post', postSchema);
+exports.ArchivedPost = mongoose.model('ArchivedPost', ArchivedPostSchema);
