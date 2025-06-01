@@ -13,6 +13,7 @@ const gourdvariety = require('./routes/gourdvariety');
 const monitoring = require('./routes/Monitoring');
 const dashboard = require('./routes/dashboard');
 
+// require('dotenv').config({ path: './config/config.env' });
 const app = express();
 // const server = http.createServer(app);
 

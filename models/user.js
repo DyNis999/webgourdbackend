@@ -51,6 +51,7 @@ const userSchema = new mongoose.Schema({
         default: ''
     },
     isOnline: { type: Boolean, default: false },
+    verified:{Boolean}, 
 });
 
 userSchema.pre('save', async function (next) {

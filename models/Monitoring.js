@@ -1,5 +1,15 @@
 const mongoose = require('mongoose');
 
+const imageSchema = new mongoose.Schema({
+  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+  url: { type: String, required: true }
+}, { _id: false });
+
+const harvestDaySchema = new mongoose.Schema({
+  date: { type: Date, required: true },
+  notificationStatus: { type: Boolean, default: false }
+}, { _id: false });
+
 const monitoringSchema = new mongoose.Schema({
   userID: {
     type: mongoose.Schema.Types.ObjectId,
@@ -8,44 +18,23 @@ const monitoringSchema = new mongoose.Schema({
   },
   plotNo: {
     type: String,
-    required: true,
   },
   gourdType: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'GourdType',
     required: true,
   },
-  variety: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Variety',
-    required: true,
-  },
   dateOfPollination: {
     type: Date,
     required: true,
   },
-  pollinatedFlowers: {
-    type: Number,
+  dateOfHarvest: {
+    type: [harvestDaySchema], // Array of 7 days
     required: true,
-    min: 0,
+    validate: [arr => arr.length === 7, 'dateOfHarvest must have 7 days']
   },
-  pollinatedFlowerImages: [{
-    type: String,  // Assuming these are image URLs
-    required: false,  // Set to true if the images are mandatory
-  }],
-  fruitsHarvested: {
-    type: Number,
-    default: 0,
-    min: 0,
-  },
-  fruitHarvestedImages: [{
-    type: String,  // Assuming these are image URLs
-    required: false,  // Set to true if the images are mandatory
-  }],
-  dateOfFinalization: {
-    type: Date,
-    default: null,
-  },
+  pollinatedFlowerImages: [imageSchema],
+  fruitHarvestedImages: [imageSchema],
   status: {
     type: String,
     enum: ['In Progress', 'Completed', 'Failed'],
