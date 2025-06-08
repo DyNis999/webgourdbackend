@@ -36,7 +36,7 @@ app.use ('/api/v1/Monitoring', monitoring);
 app.use ('/api/v1/Dashboard', dashboard);
 
 const server = app.listen(4000, () => {
-  console.log("Server is running on http://localhost:4000");
+  console.log("Server is running on https://webgourd.vercel.app");
 });
 
 const io = new Server(server, {
