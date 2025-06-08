@@ -395,6 +395,8 @@
 
 
 const Monitoring = require('../models/Monitoring');
+const {User} = require('../models/user');
+const {Post} = require('../models/Post');
 const mongoose = require("mongoose");
 
 // Helper function to get the week number of a date
@@ -814,5 +816,26 @@ exports.getGourdTypeUserSummary = async (req, res) => {
   } catch (error) {
     console.error("Error in getGourdTypeUserSummary:", error);
     res.status(500).json({ message: "Error fetching summary data" });
+  }
+};
+// Controller to get user count
+exports.getUserCount = async (req, res) => {
+  try {
+    const count = await User.countDocuments();
+    console.log("User count:", count);
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user count" });
+  }
+};
+
+// Controller to get post count
+exports.getPostCount = async (req, res) => {
+  try {
+    const count = await Post.countDocuments();
+    console.log("Post count:", count);
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching post count" });
   }
 };

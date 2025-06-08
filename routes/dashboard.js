@@ -8,7 +8,9 @@ const {
   getPollinationByWeekID,
   getCompletedByWeekId,
   getFailedByWeekId,
-  getGourdTypeUserSummary
+  getGourdTypeUserSummary,
+  getUserCount,
+  getPostCount
 } = require('../controllers/Dashboard');
 
 router.get('/Adminpollination/week', AdmingetPollinationByWeek);
@@ -19,6 +21,9 @@ router.get('/Admincompleted/week', AdmingetCompletedByWeek);
 // Route to get failed data by week
 router.get('/Adminfailed/week', AdmingetFailedByWeek);
 
+router.get('/users/count', getUserCount);
+router.get('/posts/count', getPostCount);
+
 router.get('/GourdTypeUserSummary', getGourdTypeUserSummary);// Route to get pollination data by week
 
 
@@ -27,6 +32,7 @@ router.get('/pollination/week/:userId', authJwt.isAuthenticatedUser, getPollinat
 router.get('/completed/week/:userId', authJwt.isAuthenticatedUser, getCompletedByWeekId);
 
 router.get('/failed/week/:userId', authJwt.isAuthenticatedUser, getFailedByWeekId);
+
 
 
 module.exports = router;
