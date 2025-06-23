@@ -10,8 +10,11 @@ const {
   getFailedByWeekId,
   getGourdTypeUserSummary,
   getUserCount,
-  getPostCount
+  getPostCount,
+  getOverallPollinationStats
 } = require('../controllers/Dashboard');
+
+router.get('/overall-stats', getOverallPollinationStats);
 
 router.get('/Adminpollination/week', AdmingetPollinationByWeek);
 
