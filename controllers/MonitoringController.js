@@ -7,9 +7,9 @@ const getMonitorings = async (req, res) => {
         const monitorings = await Monitoring.find()
             .populate('userID', 'name email')
             .populate('gourdType', 'name description')
-            .populate('variety', 'name description');
         res.status(200).json(monitorings);
     } catch (err) {
+        console.error(err)
         res.status(500).json({ message: err.message });
     }
 };
