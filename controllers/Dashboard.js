@@ -452,35 +452,71 @@ exports.getPostCount = async (req, res) => {
 
 
 // Controller to get overall pollination statistics (total pollinated, completed, and failed)
+// exports.getOverallPollinationStats = async (req, res) => {
+//   try {
+//     // 1. Total pollinated: count of all pollinated flower images
+//     const pollinatedStats = await Monitoring.aggregate([
+//       {
+//         $project: {
+//           pollinatedCount: { $size: { $ifNull: ["$pollinatedFlowerImages", []] } }
+//         }
+//       },
+//       {
+//         $group: {
+//           _id: null,
+//           totalPollinated: { $sum: "$pollinatedCount" }
+//         }
+//       }
+//     ]);
+
+//     const totalPollinated = pollinatedStats[0]?.totalPollinated || 0;
+
+//     // 2. Total completed: count of all records where status is Completed
+//     const totalCompleted = await Monitoring.countDocuments({ status: "Completed" });
+
+//     // 3. Total failed: count of all records where status is Failed
+//     const totalFailed = await Monitoring.countDocuments({ status: "Failed" });
+
+//     res.status(200).json({
+//       totalPollinated,
+//       totalCompleted,
+//       totalFailed,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching overall pollination stats:", error);
+//     res.status(500).json({ message: "Error fetching overall pollination stats" });
+//   }
+// };
+
 exports.getOverallPollinationStats = async (req, res) => {
   try {
-    // 1. Total pollinated: count of all pollinated flower images
-    const pollinatedStats = await Monitoring.aggregate([
+    const stats = await Monitoring.aggregate([
       {
         $project: {
-          pollinatedCount: { $size: { $ifNull: ["$pollinatedFlowerImages", []] } }
+          pollinatedCount: { $size: { $ifNull: ["$pollinatedFlowerImages", []] } },
+          harvestedCount: { $size: { $ifNull: ["$fruitHarvestedImages", []] } }
         }
       },
       {
         $group: {
           _id: null,
-          totalPollinated: { $sum: "$pollinatedCount" }
+          totalPollinated: { $sum: "$pollinatedCount" },
+          totalHarvested: { $sum: "$harvestedCount" }
         }
       }
     ]);
 
-    const totalPollinated = pollinatedStats[0]?.totalPollinated || 0;
+    const totalPollinated = stats[0]?.totalPollinated || 0;
+    const totalHarvested = stats[0]?.totalHarvested || 0;
 
-    // 2. Total completed: count of all records where status is Completed
-    const totalCompleted = await Monitoring.countDocuments({ status: "Completed" });
-
-    // 3. Total failed: count of all records where status is Failed
-    const totalFailed = await Monitoring.countDocuments({ status: "Failed" });
+    const successRate = totalPollinated > 0
+      ? (totalHarvested / totalPollinated) * 100
+      : 0;
 
     res.status(200).json({
       totalPollinated,
-      totalCompleted,
-      totalFailed,
+      totalHarvested,
+      successRate: successRate.toFixed(2) + '%'
     });
   } catch (error) {
     console.error("Error fetching overall pollination stats:", error);

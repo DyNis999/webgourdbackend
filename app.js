@@ -13,19 +13,19 @@ const gourdvariety = require('./routes/gourdvariety');
 const monitoring = require('./routes/Monitoring');
 const dashboard = require('./routes/dashboard');
 
-// require('dotenv').config({ path: './config/config.env' });
+require('dotenv').config({ path: './config/config.env' });
 const app = express();
 // const server = http.createServer(app);
 
 app.use(cors({
-  origin: "https://webgourd.vercel.app",
+  // origin: "https://webgourd.vercel.app",
+  origin: "http://localhost:3000",
   credentials: true,
 }));
-
+app.use('/public', express.static('public'));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
-
 app.use('/api/v1/users', user);
 app.use('/api/v1/categories', category);
 app.use('/api/v1/posts', post);
@@ -36,12 +36,12 @@ app.use ('/api/v1/Monitoring', monitoring);
 app.use ('/api/v1/Dashboard', dashboard);
 
 const server = app.listen(4000, () => {
-  console.log("Server is running on https://webgourd.vercel.app");
+  console.log("Server is running on http://localhost:4000");
 });
 
 const io = new Server(server, {
   cors: {
-    origin: "https://webgourd.vercel.app",
+    // origin: "https://webgourd.vercel.app",
     methods: ["GET", "POST"],
     credentials: true,
     secure: true,
